@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackConfiguration = require('../webpack.config')
 
-const { renderToString } = require('react-dom/server')
+const { renderToStaticMarkup } = require('react-dom/server')
 const { createIsomorphicWebpack } = require('isomorphic-webpack')
 
 const compiler = webpack(webpackConfiguration)
@@ -40,7 +40,8 @@ const renderFullPage = body => `
 
 app.get('/', (req, res) => {
   const requestUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
-  const app = renderToString(evalBundleCode(requestUrl))
+  const bundle = evalBundleCode(requestUrl)
+  const app = renderToStaticMarkup(bundle)
   res.send(renderFullPage(app))
 })
 
