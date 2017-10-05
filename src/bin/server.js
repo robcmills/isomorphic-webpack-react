@@ -33,15 +33,16 @@ const renderFullPage = body => `
 <html>
   <head></head>
   <body>
-    <div id='app'>${body}</div>
-    <script src='/static/app.js'></script>
+    ${body}
   </body>
 </html>`
 
-app.get('/', (req, res) => {
+app.get('/:componentName', (req, res) => {
   const requestUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
   const bundle = evalBundleCode(requestUrl)
-  const app = renderToStaticMarkup(bundle)
+  const name = req.params.componentName
+  const component = bundle[name]
+  const app = renderToStaticMarkup(component())
   res.send(renderFullPage(app))
 })
 
