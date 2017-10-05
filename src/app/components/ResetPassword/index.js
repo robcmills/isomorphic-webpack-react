@@ -1,3 +1,4 @@
 const React = require('react')
 
-module.exports = () => <div>Reset Password</div>
+module.exports = ({ userFullName }) =>
+	<div>Reset Password for {userFullName}</div>

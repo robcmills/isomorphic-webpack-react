@@ -28,7 +28,7 @@ app.use(async (req, res, next) => {
   next()
 })
 
-const renderFullPage = body => `
+const renderTemplate = body => `
 <!doctype html>
 <html>
   <head></head>
@@ -37,13 +37,14 @@ const renderFullPage = body => `
   </body>
 </html>`
 
-app.get('/:componentName', (req, res) => {
+app.get('/:type', (req, res) => {
   const requestUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
   const bundle = evalBundleCode(requestUrl)
-  const name = req.params.componentName
-  const component = bundle[name]
-  const app = renderToStaticMarkup(component())
-  res.send(renderFullPage(app))
+  const type = req.params.type
+  const component = bundle.components[type]
+  const sampleData = bundle.sampleData[type]
+  const body = renderToStaticMarkup(component(sampleData))
+  res.send(renderTemplate(body))
 })
 
 app.listen(8000)
